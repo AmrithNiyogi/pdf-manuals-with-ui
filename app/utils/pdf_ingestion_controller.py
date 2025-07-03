@@ -8,7 +8,7 @@ import redis.asyncio as aioredis
 from bson import ObjectId
 from fastapi import APIRouter, UploadFile, File
 from app.utils.logging_utils import setup_logger
-from app.services.kg_services import run_kg_population_pipeline
+from app.services.pdf_ingestion_service import run_kg_population_pipeline
 from app.configs.settings import settings
 from fastapi.responses import JSONResponse
 from typing import Dict, Any
