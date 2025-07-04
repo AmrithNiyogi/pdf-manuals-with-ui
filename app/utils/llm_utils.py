@@ -48,7 +48,7 @@ def get_response(prompts: list[dict], model_name: str = 'sangria_reasoning', tag
         raise HTTPException(status_code=500, detail=f"LLM API Error: {str(e)}")
 
 
-async def get_embedding(text, model_name: str = "sangria_reasoning") -> List[float]:
+async def get_embedding(text, model_name: str = "sangria_embedding") -> List[float]:
     global client
     if client is None:
         logger.info("[Embedding] Initializing OpenAI client...")

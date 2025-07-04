@@ -1,18 +1,37 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MessageCircle, BookOpen, Gem, HelpCircle } from "lucide-react"
 import { ChatAssistant } from "./components/chat-assistant"
 import { ProductManuals } from "./components/product-manuals"
+import { CdnCssLoader } from "./components/cdn-css-loader"
 
 export default function ProductAssistantApp() {
   const [activeTab, setActiveTab] = useState("chat")
+  const [cssLoaded, setCssLoaded] = useState(false)
+
+  useEffect(() => {
+    // Listen for CSS loaded event
+    const handleCssLoaded = (event: CustomEvent) => {
+      setCssLoaded(true)
+      console.log("Tenant CSS loaded:", event.detail)
+    }
+
+    window.addEventListener("tenantCssLoaded", handleCssLoaded as EventListener)
+
+    return () => {
+      window.removeEventListener("tenantCssLoaded", handleCssLoaded as EventListener)
+    }
+  }, [])
 
   return (
     <div id="product-assistant-app" className="min-h-screen bg-gray-50">
+      {/* Load tenant-specific CSS */}
+      <CdnCssLoader />
+
       <div id="main-container" className="max-w-6xl mx-auto p-4">
         {/* Header */}
         <div id="app-header" className="flex items-center gap-3 mb-8">
@@ -36,6 +55,7 @@ export default function ProductAssistantApp() {
               id="ai-badge"
               variant="secondary"
               className="bg-purple-50 text-purple-700 border-purple-200 px-4 py-2 text-sm font-medium"
+              data-css-loaded={cssLoaded}
             >
               <Gem className="w-4 h-4 mr-2" />
               AI-Powered Product Support
@@ -50,7 +70,7 @@ export default function ProductAssistantApp() {
         </div>
 
         {/* Tabbed Interface */}
-        <Card id="main-card" className="shadow-sm">
+        <Card id="main-card" className="shadow-sm" data-css-loaded={cssLoaded}>
           <Tabs id="main-tabs" value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList id="tabs-list" className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger id="chat-tab" value="chat" className="flex items-center gap-2">
